@@ -3,7 +3,7 @@ package redis
 import "testing"
 
 func SetupRedis() *Redis {
-	conn := Connection{"tcp", ":6379", "9"}
+	conn := Connection{"tcp", ":6379", "6"}
 	rdb, _ := conn.Dial()
 
 	return rdb
