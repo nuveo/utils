@@ -143,8 +143,8 @@ func (es *ElasticSearch) NewBulk() *elastic.BulkService {
 	return es.client.Bulk()
 }
 
-func (es *ElasticSearch) AddToBulk(bulk *elastic.BulkService, table string, model interface{}) {
-	bulk.Add(elastic.NewBulkIndexRequest().Index(es.index).Type(table).Doc(model))
+func (es *ElasticSearch) AddToBulk(bulk *elastic.BulkService, table string, model interface{}, id string) {
+	bulk.Add(elastic.NewBulkIndexRequest().Index(es.index).Type(table).Doc(model).Id(id))
 }
 
 func (es *ElasticSearch) SendBulk(bulk *elastic.BulkService) {

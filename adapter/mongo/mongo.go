@@ -1,7 +1,10 @@
 package mongo
 
 import (
+	"fmt"
 	"time"
+
+	"github.com/poorny/utils/adapter"
 
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -39,7 +42,7 @@ func (m *Mongo) Conn() error {
 	return nil
 }
 
-func (m *Mongo) Copy() *Mongo {
+func (m *Mongo) Copy() adapter.Driver {
 	sessionCopy := m.session.Copy()
 	return &Mongo{m.uri, m.database, sessionCopy, m.pageLimit}
 }
@@ -62,6 +65,19 @@ func (m *Mongo) Update(collection string, where bson.M, model interface{}) error
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (m *Mongo) UpdateAll(collection string, where bson.M, model interface{}) error {
+	coll := m.session.DB(m.database).C(collection)
+	info, err := coll.UpdateAll(where, model)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(info)
 
 	return nil
 }
