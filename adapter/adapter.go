@@ -8,5 +8,7 @@ type Driver interface {
 	Find(query bson.M, collection string, params ...int) ([]map[string]interface{}, error)
 	Insert(collection string, model interface{}) error
 	Update(collection string, where bson.M, model interface{}) error
+	UpdateAll(collection string, where bson.M, model interface{}) error
 	Copy() Driver
+	Close()
 }
