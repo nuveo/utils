@@ -3,6 +3,7 @@ package elastic
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/olivere/elastic"
@@ -135,6 +136,41 @@ func (es *ElasticSearch) Delete(table string, query elastic.Query) error {
 		return err
 	}
 	return nil
+}
+
+//Suggester and Completion
+
+func (es *ElasticSearch) Suggester(tsName, field, text string) []elastic.SearchSuggestion {
+	ts := elastic.NewTermSuggester(tsName)
+	ts = ts.Text(text)
+	ts = ts.Field(field)
+
+	return es.suggester(tsName, ts)
+}
+
+func (es *ElasticSearch) Completion(tsName, field, text string) []elastic.SearchSuggestion {
+	ts := elastic.NewCompletionSuggester(tsName)
+	ts = ts.Text(text)
+	ts = ts.Field(field)
+
+	return es.suggester(tsName, ts)
+}
+
+func (es *ElasticSearch) suggester(tsName string, term elastic.Suggester) []elastic.SearchSuggestion {
+	all := elastic.NewMatchAllQuery()
+
+	searchResult, err := es.client.Search().
+		Index(es.index).
+		Query(&all).
+		Suggester(term).
+		Do()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result, _ := searchResult.Suggest[tsName]
+
+	return result
 }
 
 //bulk methods
