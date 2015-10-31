@@ -1,10 +1,11 @@
 package mongo
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/poorny/utils/adapter"
+
+	"log"
 
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -15,20 +16,25 @@ type Mongo struct {
 	database  string
 	session   *mgo.Session
 	pageLimit int
+	timeout   int
 }
 
 func New(uri, database string) *Mongo {
-	return &Mongo{uri, database, nil, 20}
+	return &Mongo{uri, database, nil, 20, 30}
 }
 
 func (m *Mongo) SetLimit(limit int) {
 	m.pageLimit = limit
 }
 
+func (m *Mongo) SetTimeout(timeout int) {
+	m.timeout = timeout
+}
+
 func (m *Mongo) Conn() error {
 	dialInfo := &mgo.DialInfo{
 		Addrs:    []string{m.uri},
-		Timeout:  30 * time.Second,
+		Timeout:  m.timeout * time.Second,
 		Database: m.database,
 	}
 
@@ -77,7 +83,7 @@ func (m *Mongo) UpdateAll(collection string, where bson.M, model interface{}) er
 		return err
 	}
 
-	fmt.Println(info)
+	log.Println(info)
 
 	return nil
 }
