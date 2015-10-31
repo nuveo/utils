@@ -2,7 +2,7 @@ package elastic
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"log"
 	"time"
 
@@ -80,7 +80,7 @@ func (es *ElasticSearch) Find(query elastic.Query, table string, params ...int) 
 		return nil, 0, err
 	}
 
-	fmt.Printf("Query took %d milliseconds\n", searchResult.TookInMillis)
+	log.Printf("Query took %d milliseconds\n", searchResult.TookInMillis)
 
 	if searchResult.Hits != nil {
 		// Iterate through results
@@ -126,9 +126,18 @@ func (es *ElasticSearch) Insert(table string, model interface{}) error {
 }
 
 func (es *ElasticSearch) Delete(table string, query elastic.Query) error {
-	_, err := es.client.DeleteByQuery().Index(es.index).Type(table).Query(query).Do()
+	res, err := es.client.DeleteByQuery().Index(es.index).Type(table).Query(query).Do()
 	if err != nil {
 		return err
+	}
+
+	if res == nil {
+		return errors.New("response is nil")
+	}
+
+	idx, found := res.Indices[es.index]
+	if !found {
+		log.Printf("expected Found = true; got: %v", found)
 	}
 
 	_, err = es.client.Flush().Index(es.index).Do()
