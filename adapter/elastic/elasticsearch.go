@@ -135,7 +135,7 @@ func (es *ElasticSearch) Delete(table string, query elastic.Query) error {
 		return errors.New("response is nil")
 	}
 
-	idx, found := res.Indices[es.index]
+	_, found := res.Indices[es.index]
 	if !found {
 		log.Printf("expected Found = true; got: %v", found)
 	}
