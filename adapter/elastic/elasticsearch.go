@@ -125,6 +125,28 @@ func (es *ElasticSearch) Insert(table string, model interface{}) error {
 	return nil
 }
 
+func (es *ElasticSearch) InsertByID(table, id string, model interface{}) error {
+	_, err := es.client.Index().
+		Index(es.index).
+		Type(table).
+		Id(id).
+		BodyJson(model).
+		Do()
+
+	if err != nil {
+		return err
+	}
+
+	// Flush data
+	_, err = es.client.Flush().Index(es.index).Do()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (es *ElasticSearch) Delete(table string, query elastic.Query) error {
 	res, err := es.client.DeleteByQuery().Index(es.index).Type(table).Query(query).Do()
 	if err != nil {
@@ -144,6 +166,17 @@ func (es *ElasticSearch) Delete(table string, query elastic.Query) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (es *ElasticSearch) Update(table string, id string, data map[string]string) error {
+	log.Println(id)
+	_, err := es.client.Update().Index(es.index).Type(table).Id(id).Doc(data).Do()
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
