@@ -34,7 +34,7 @@ func (m *Mongo) SetTimeout(timeout int) {
 func (m *Mongo) Conn() error {
 	dialInfo := &mgo.DialInfo{
 		Addrs:    []string{m.uri},
-		Timeout:  m.timeout * time.Second,
+		Timeout:  time.Duration(m.timeout) * time.Second,
 		Database: m.database,
 	}
 
@@ -50,7 +50,7 @@ func (m *Mongo) Conn() error {
 
 func (m *Mongo) Copy() adapter.Driver {
 	sessionCopy := m.session.Copy()
-	return &Mongo{m.uri, m.database, sessionCopy, m.pageLimit}
+	return &Mongo{m.uri, m.database, sessionCopy, m.pageLimit, m.timeout}
 }
 
 func (m *Mongo) Insert(collection string, model interface{}) error {
@@ -88,7 +88,7 @@ func (m *Mongo) UpdateAll(collection string, where bson.M, model interface{}) er
 	return nil
 }
 
-func (m *Mongo) Find(query bson.M, collection string, params ...int) ([]map[string]interface{}, error) {
+func (m *Mongo) Find(collection string, query bson.M, params ...int) ([]map[string]interface{}, error) {
 	var objects []map[string]interface{}
 
 	coll := m.session.DB(m.database).C(collection)
@@ -106,6 +106,17 @@ func (m *Mongo) Find(query bson.M, collection string, params ...int) ([]map[stri
 	}
 
 	return objects, nil
+}
+
+func (m *Mongo) DeleteID(collection string, id string) error {
+	coll := m.session.DB(m.database).C(collection)
+	err := coll.RemoveId(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (m *Mongo) DropCollection(collection string) error {
