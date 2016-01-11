@@ -108,7 +108,7 @@ func (m *Mongo) Find(collection string, query bson.M, params ...int) ([]map[stri
 	return objects, nil
 }
 
-func (m *Mongo) DeleteID(collection string, id string) error {
+func (m *Mongo) DeleteID(collection string, id bson.ObjectId) error {
 	coll := m.session.DB(m.database).C(collection)
 	err := coll.RemoveId(id)
 
