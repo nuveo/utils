@@ -186,7 +186,7 @@ func (es *ElasticSearch) DeleteID(table string, id string) error {
 	return nil
 }
 
-func (es *ElasticSearch) Update(table string, id string, data map[string]string) error {
+func (es *ElasticSearch) Update(table string, id string, data map[string]interface{}) error {
 	_, err := es.client.Update().Index(es.index).Type(table).Id(id).Doc(data).Do()
 
 	if err != nil {
