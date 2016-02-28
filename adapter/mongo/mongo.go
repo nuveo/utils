@@ -3,7 +3,7 @@ package mongo
 import (
 	"time"
 
-	"github.com/poorny/utils/adapter"
+	"github.com/nuveo/utils/adapter"
 
 	"log"
 
