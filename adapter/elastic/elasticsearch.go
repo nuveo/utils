@@ -219,7 +219,7 @@ func (es *ElasticSearch) suggester(tsName string, term elastic.Suggester) []elas
 
 	searchResult, err := es.client.Search().
 		Index(es.index).
-		Query(&all).
+		Query(all).
 		Suggester(term).
 		Do()
 	if err != nil {
