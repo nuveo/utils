@@ -1,8 +1,8 @@
 package adapter
 
-import "labix.org/v2/mgo/bson"
+import "gopkg.in/mgo.v2/bson"
 
-// DB Driver interface
+// Driver DB interface
 type Driver interface {
 	Conn() error
 	Find(collection string, query bson.M, params ...int) ([]map[string]interface{}, error)

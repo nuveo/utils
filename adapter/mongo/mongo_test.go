@@ -3,14 +3,14 @@ package mongo
 import (
 	"testing"
 
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/mgo/bson"
 )
 
 func TestConnectionAndInsertCollection(t *testing.T) {
 	db := New("127.0.0.1:27017", "test")
 
 	if db == nil {
-		t.Fatalf("error creating db: ", db)
+		t.Fatal("error creating db: ", db)
 	}
 
 	// Connect to the DB

@@ -1,14 +1,12 @@
 package mongo
 
 import (
+	"log"
 	"time"
 
 	"github.com/nuveo/utils/adapter"
-
-	"log"
-
-	"labix.org/v2/mgo"
-	"labix.org/v2/mgo/bson"
+	"gopkg.in/mgo.v2/mgo"
+	"gopkg.in/mgo.v2/mgo/bson"
 )
 
 type Mongo struct {
