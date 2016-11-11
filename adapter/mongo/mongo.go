@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/nuveo/utils/adapter"
-	"gopkg.in/mgo.v2/mgo"
-	"gopkg.in/mgo.v2/mgo/bson"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Mongo struct {
