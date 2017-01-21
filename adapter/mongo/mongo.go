@@ -40,7 +40,6 @@ func (m *Mongo) Conn() error {
 	if err != nil {
 		return err
 	}
-	defer sess.Close()
 
 	m.session = sess
 	return nil
