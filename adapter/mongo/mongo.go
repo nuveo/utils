@@ -37,10 +37,10 @@ func (m *Mongo) Conn() error {
 	}
 
 	sess, err := mgo.DialWithInfo(dialInfo)
-
 	if err != nil {
 		return err
 	}
+	defer sess.Close()
 
 	m.session = sess
 	return nil
